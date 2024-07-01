@@ -34,6 +34,6 @@ you can not edit html and css file you can just work on **Js File**
 
 ### Questions:
 
-- how to get data from a file with js?
+- how to get data from a html table with js? (https://www.youtube.com/watch?v=_rSZcUU61co)[]
 - how to get data from a live link with js(ajax)?
 -
