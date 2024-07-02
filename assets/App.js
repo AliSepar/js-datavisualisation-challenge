@@ -1,42 +1,12 @@
+//live table
+
 // getting data from html
-
-// have to add data to a Object each country object inside it each year with value.
-// let table1 = {
-//   belgium: {
-//     2002: "1012,8",
-//     2003: "1007,8"
-//     .
-//     .
-//     .
-//   },
-// };
-
-// let tbodyData = table1.querySelectorAll("tbody tr");
-// console.log(tbodyData[1].children[1].textContent);
-// console.log(tbodyData.length);
-// for (let row = 0; row < tbodyData.length; row++) {
-//   for (let z = 0; z < tbodyData[row].children.length; z++) {
-//     console.log(tbodyData[row].children[z].textContent);
-//     let dataths = {
-//         tbodyData[row].children[z].textContent,
-//     };
-//     data.push();
-//   }
-// }
-
-// for (let i = 0; i < 13; i++) {
-//   tbodyData.forEach((row) => {
-//     // console.log(row.children[i].textContent);
-//     let res = {
-//       number: row.children[0].textContent,
-//       country: row.children[1].textContent,
-//       2002: row.children[2].textContent,
-//     };
-//     console.log(res);
-//   });
-// }
 let table1 = document.querySelector("#table1");
-const headers = Array.from(table1.querySelectorAll("tbody>tr:first-child>th"))
+const headers = Array.from(
+  table1.querySelectorAll(
+    "tbody>tr:first-child>th:not(:nth-child(0)):not(:nth-child(1))" // will not count 2 first ths
+  )
+)
   .slice(1)
   .map((th) => th.innerText);
 //   This selects all the <th> elements inside the <thead>, converts them to an array, and maps them to extract their text content. slice(1) is used to skip the first header which is "Year"
@@ -48,47 +18,34 @@ const data = Array.from(
   let countryData = { country: cells[0].innerText }; // countryData is an object initialized with the country name from the first cell.
   headers.forEach((year, index) => {
     // The headers.forEach loop goes through each header year, and for each year, it adds a key-value pair to countryData
-    countryData[year] = cells[index]
+    countryData[year] = cells[index++]
       ? parseFloat(cells[index].innerText.replace(",", ".")) // with the year as the key and the corresponding cell value (parsed as a float) as the value.
       : null;
   });
   return countryData;
 });
 
-// console.log(data);
+// adding chart data to the html
+let chartDiv = document.createElement("div");
+chartDiv.style = "width:800px; height:500px";
 
 const chartTag = document.createElement("canvas");
-const chartTagId = chartTag.setAttribute("id", "chartTag");
-chartTag.style.overflowX = "auto";
-chartTag.style.border = "3px solid red";
+// const chartTagId = chartTag.setAttribute("id", "chartTag");
+// chartTag.style.overflowY = "scroll";
 
-table1.insertAdjacentElement("beforebegin", chartTag);
-// const ctx = document.getElementById("myChart");
-
-// console.log(data.map((row) => row.country));
+chartDiv.appendChild(chartTag);
+table1.insertAdjacentElement("beforebegin", chartDiv);
 
 const years = headers;
+console.log(years);
 // Generate datasets for Chart.js
 const datasets = years.map((year, index) => ({
   label: year,
   data: data.map((row) => row[year]),
   fill: false,
   backgroundColor: `hsl(${index * 30}, 70%, 50%)`, // Generate colors dynamically
-  tension: 0.2,
+  tension: 0.1,
 }));
-console.log(datasets);
-// const dataset = {
-//   labels: data.map((row) => row.country),
-//   datasets: [
-//     {
-//       label: "2002",
-//       data: data.map((row) => row["2002"]),
-//       fill: false,
-//       backgroundColor: "#9BD0F5",
-//       tension: 0.1,
-//     },
-//   ],
-// };
 
 new Chart(chartTag, {
   type: "bar",
@@ -97,6 +54,67 @@ new Chart(chartTag, {
     datasets: datasets,
   },
   options: {
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      x: {
+        beginAtZero: true,
+      },
+    },
+  },
+});
+
+// second table
+const table2 = document.getElementById("table2");
+//header2 is the table thead th inner texts
+const headers2 = Array.from(table2.querySelectorAll("thead>tr>th"))
+  .slice(1)
+  .map((th) => th.innerText);
+
+console.log(headers2);
+
+const table2Data = Array.from(table2.querySelectorAll("tbody>tr")).map(
+  (row) => {
+    const cells = Array.from(row.querySelectorAll("td"));
+    let countryData2 = { country: cells[0].innerText };
+
+    headers2.forEach((year, index) => {
+      countryData2[year] = cells[index]
+        ? parseFloat(cells[index].innerText.replace(",", "."))
+        : null;
+    });
+    return countryData2;
+  }
+);
+
+// displaying data to html
+let chart2Div = document.createElement("div");
+chart2Div.style = "width:800px; height:500px";
+
+let chartTag2 = document.createElement("canvas");
+chart2Div.appendChild(chartTag2);
+
+// add the div before the table in html
+table2.insertAdjacentElement("beforebegin", chart2Div);
+
+const table2years = headers2;
+
+const table2datasets = table2years.map((year, index) => ({
+  label: year,
+  data: table2Data.map((row) => row[year]),
+  fill: false,
+  backgroundColor: `hsl(${index * 30}, 70%, 50%)`, // Generate colors dynamically
+  tension: 0.1,
+}));
+
+new Chart(chartTag2, {
+  type: "bar",
+  data: {
+    labels: table2Data.map((row) => row.country),
+    datasets: table2datasets,
+  },
+  options: {
+    maintainAspectRatio: false,
     responsive: true,
     scales: {
       x: {
