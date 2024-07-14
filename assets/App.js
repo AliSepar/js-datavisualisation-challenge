@@ -74,6 +74,9 @@ let liveChart = new Chart(liveChartCanva, {
 //
 //
 //table1
+
+//adding option for
+
 // getting data from html
 let table1 = document.querySelector("#table1");
 // this will get the first row of the table and get the innerText of each th  which will give you the year of table
@@ -102,15 +105,25 @@ const data = Array.from(
 });
 
 // adding chart data to the html
+
+let mainChartContainer = document.createElement("div");
+// mainChartContainer.style.overflowX = "scroll";
+
 let chartDiv = document.createElement("div");
-chartDiv.style = "width:800px; height:500px";
+chartDiv.setAttribute("id", "chartDiv");
+let chartDivId = document.getElementById("chartDiv");
+chartDiv.style = "width:800px; height:700px;overflowX:scroll";
 
 const chartTag = document.createElement("canvas");
+
+chartTag.style.width = "2000px";
+// chartTag.style.
 // const chartTagId = chartTag.setAttribute("id", "chartTag");
 // chartTag.style.overflowY = "scroll";
 
 chartDiv.appendChild(chartTag);
-table1.insertAdjacentElement("beforebegin", chartDiv);
+mainChartContainer.appendChild(chartDiv);
+table1.insertAdjacentElement("beforebegin", mainChartContainer);
 
 const years = headers;
 // console.log(years);
@@ -121,6 +134,7 @@ const datasets = years.map((year, index) => ({
   fill: false,
   backgroundColor: `hsl(${index * 30}, 70%, 50%)`, // Generate colors dynamically
   tension: 0.1,
+  hidden: index !== years.length - 1, // Only the last dataset is not hidden
 }));
 
 new Chart(chartTag, {
@@ -132,9 +146,20 @@ new Chart(chartTag, {
   options: {
     maintainAspectRatio: false,
     responsive: true,
+    scaleShowValues: true,
     scales: {
+      // y: {
+      //   beginAtZero: true,
+      //   ticks: {
+      //     stepSize: 500,
+      //   },
+      // },
       x: {
+        stepSize: 1,
         beginAtZero: true,
+        ticks: {
+          autoSkip: false,
+        },
       },
     },
   },
