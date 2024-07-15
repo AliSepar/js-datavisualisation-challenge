@@ -2,6 +2,8 @@
 
 This is a practice project to learn more about JavaScript and it's Third-party libraries for display data.
 
+Live Page Link : [Click here](https://alisepar.github.io/js-datavisualisation-challenge/)
+
 ## Given Objectives
 
 This consolidation challenge will help you assess your ability to solve a problem inspired from real-life situations using your new javascript muscles involving the following know-hows :
